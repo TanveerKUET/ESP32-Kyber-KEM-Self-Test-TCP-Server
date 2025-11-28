@@ -429,17 +429,31 @@ Finally, close the connection and wait before serving another client:
 
 ---
 
-## 8. Protocol Summary
+## 8. Output
+```c
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4744
+load:0x40078000,len:15672
+load:0x40080400,len:3164
+entry 0x4008059c
 
-For each client:
-
-1. **Server** generates a Kyber keypair.
-2. **Server → Client**: `PK:<hex_public_key>\n`
-3. **Client** runs `crypto_kem_enc` with that public key and sends back:
-   ```text
-   CT:<hex_ciphertext>
-
-   ```
-4. **Server** runs `crypto_kem_dec(ss, ct, sk)`.
-5. Both sides now share the same 32‑byte secret `ss` (if everything is correct).
-
+=== ESP32 Kyber-512 SERVER (network mode) ===
+=== Testing Kyber KEM (keypair + enc + dec self-test) ===
+[+] Keypair generation SUCCESS!
+PK length: 800
+SK length: 1632
+PK (first 64 hex chars):
+793b532f53047f3918823212ac9a864c686743570cca6c68ffacb6a5d59561c6
+[+] crypto_kem_enc SUCCESS!
+CT (first 64 hex chars):
+2b7ad58a88229512046fdcc555f86054e44b624820d49c6a2fe4febb2b1b24cd
+[✓] KEM self-test PASSED: shared secrets match!
+Shared secret (first 64 hex chars): a2bdafb7bb5119cf5621529611033dfe86da897721332338e02176076524d47e
+=== Kyber self-test DONE ===
+Connecting to WiFi...
+Connected, IP address: 192.168.137.93
+Server listening on port 5000
+```
